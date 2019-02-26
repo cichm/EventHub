@@ -1,7 +1,12 @@
+group 'net.usermd.mcichon'
+
 apply plugin: 'application'
 
 mainClassName = 'net.usermd.mcichon'
 
 dependencies {
     compile project(':primitives')
+
+    testCompile ('org.spockframework:spock-core:1.1-groovy-2.4')
+    testCompile('com.jayway.awaitility:awaitility-groovy:1.7.0')
 }
