@@ -25,7 +25,7 @@ class BusSpec extends Specification {
         def subject = "testMessage"
 
         when:
-        bus.responseFor(subject).then({counter.incrementAndGet()})
+        bus.emit(subject).then({counter.incrementAndGet()})
         bus.message(subject).send();
 
         then:
