@@ -2,6 +2,7 @@ package net.usermd.mcichon.bus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,27 +12,29 @@ public class Bus {
         private ExecutorService pool;
         private Map<String, List<Action>> actions;
 
-        SynchronousBus() {}
+        SynchronousBus() {
+            this.actions = new ConcurrentHashMap<>();
+        }
 
-        public SynchronousBus initBus(int threads) throws IllegalArgumentException {
+        public SynchronousBus initThreads(int threads) throws IllegalArgumentException {
             if (threads < 0 || threads > 100) {
                 throw new IllegalArgumentException();
             }
 
-            ExecutorService pool = Executors.newFixedThreadPool(threads);
-            Map<String, List<Action>> actions = new ConcurrentHashMap<>();
-
-            this.pool = pool;
-            this.actions = actions;
+            this.pool = Executors.newFixedThreadPool(threads);
 
             return this;
         }
 
         public MessageBuilder message(String subject) {
+            Objects.requireNonNull(subject, "subject");
+
             return new MessageBuilder(pool, actions, subject);
         }
 
         public ResponseBuilder emit(String subject) {
+            Objects.requireNonNull(subject, "subject");
+
             return new ResponseBuilder(actions, subject);
         }
     }
